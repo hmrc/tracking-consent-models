@@ -27,9 +27,9 @@ class UserPreferences() {
 
   private val logger: Logger = Logger(this.getClass)
 
-  protected val userConsentCookieEncoding = "UTF-8"
-  private val userConsentCookieName     = "userConsent"
-  private val userConsentCookieVersion  = "2021.1"
+  private val userConsentCookieEncoding = "UTF-8"
+  private val userConsentCookieName       = "userConsent"
+  private val userConsentCookieVersion    = "2021.1"
 
   def preferences(implicit rh: RequestHeader): Preferences =
     (for {

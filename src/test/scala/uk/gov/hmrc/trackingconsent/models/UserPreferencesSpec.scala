@@ -22,6 +22,7 @@ import play.api.mvc.{Cookie, RequestHeader}
 import play.api.test.FakeRequest
 
 class UserPreferencesSpec extends AnyWordSpecLike with Matchers {
+
   "Given a RequestHeader with no cookies, retrieving preferences" should {
     "return false for all values" in {
       implicit val rh: RequestHeader = FakeRequest()
@@ -110,10 +111,10 @@ class UserPreferencesSpec extends AnyWordSpecLike with Matchers {
         .withCookies(
           Cookie(
             "userConsent",
-            "{%22version%22:%222021.1%22%2C%22datetimeSet%22:%222021-03-16T15:49:44.741Z%22%2C%22preferences%22:{%22measurement%22:true%2C%22settings%22:true}}"
+            "{%22somekey%22:%A%;DB%22%2C%22version%22:%222021.1%22%2C%22datetimeSet%22:%222021-03-16T15:49:44.741Z%22%2C%22preferences%22:{%22measurement%22:true%2C%22settings%22:true}}"
           )
         )
-      val userPreferences            = new UserPreferences { override val userConsentCookieEncoding = ""}
+      val userPreferences            = new UserPreferences()
 
       userPreferences.preferences.settings    should be(false)
       userPreferences.preferences.measurement should be(false)
