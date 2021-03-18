@@ -104,5 +104,19 @@ class UserPreferencesSpec extends AnyWordSpecLike with Matchers {
       userPreferences.preferences.settings    should be(false)
       userPreferences.preferences.measurement should be(false)
     }
+
+    "return false for all values if URL decoding of a userConsent cookie throws an exception" in {
+      implicit val rh: RequestHeader = FakeRequest()
+        .withCookies(
+          Cookie(
+            "userConsent",
+            "{%22version%22:%222021.1%22%2C%22datetimeSet%22:%222021-03-16T15:49:44.741Z%22%2C%22preferences%22:{%22measurement%22:true%2C%22settings%22:true}}"
+          )
+        )
+      val userPreferences            = new UserPreferences { override val userConsentCookieEncoding = ""}
+
+      userPreferences.preferences.settings    should be(false)
+      userPreferences.preferences.measurement should be(false)
+    }
   }
 }
