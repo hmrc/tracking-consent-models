@@ -32,8 +32,8 @@ class UserPreferencesSpec extends AnyWordSpecLike with Matchers {
     }
   }
 
-  "Given a RequestHeader with cookies, retrieving preferences" should {
-    "return values from the userConsent cookie" in {
+  "Given a RequestHeader with a valid userConsent cookie, retrieving preferences" should {
+    "return true values from the userConsent cookie" in {
       implicit val rh: RequestHeader = FakeRequest()
         .withCookies(Cookie(
           "userConsent",
@@ -43,9 +43,34 @@ class UserPreferencesSpec extends AnyWordSpecLike with Matchers {
 
       userPreferences.preferences.settings should be(true)
       userPreferences.preferences.measurement should be(true)
-
     }
 
+    "return false values from the userConsent cookie" in {
+      implicit val rh: RequestHeader = FakeRequest()
+        .withCookies(Cookie(
+          "userConsent",
+          "{%22version%22:%222021.1%22%2C%22datetimeSet%22:%222021-03-16T15:49:44.741Z%22%2C%22preferences%22:{%22measurement%22:false%2C%22settings%22:false}}"
+        ))
+      val userPreferences = new UserPreferences()
+
+      userPreferences.preferences.settings should be(false)
+      userPreferences.preferences.measurement should be(false)
+    }
+
+    "return mixed false and values from the userConsent cookie" in {
+      implicit val rh: RequestHeader = FakeRequest()
+        .withCookies(Cookie(
+          "userConsent",
+          "{%22version%22:%222021.1%22%2C%22datetimeSet%22:%222021-03-16T15:49:44.741Z%22%2C%22preferences%22:{%22measurement%22:false%2C%22settings%22:true}}"
+        ))
+      val userPreferences = new UserPreferences()
+
+      userPreferences.preferences.settings should be(true)
+      userPreferences.preferences.measurement should be(false)
+    }
+  }
+
+  "Given a RequestHeader with an invalid userConsent cookie, retrieving preferences" should {
     "return false for all values if a userConsent cookie is not a valid version" in {
       implicit val rh: RequestHeader = FakeRequest()
         .withCookies(Cookie(
@@ -58,5 +83,16 @@ class UserPreferencesSpec extends AnyWordSpecLike with Matchers {
       userPreferences.preferences.measurement should be(false)
     }
 
+    "return false for all values if a userConsent cookie is not expected JSON" in {
+      implicit val rh: RequestHeader = FakeRequest()
+        .withCookies(Cookie(
+          "userConsent",
+          "{%22version%22%3A%22222021.1%22%2C%22missing%22%3A%22datetimeSet%22}"
+        ))
+      val userPreferences = new UserPreferences()
+
+      userPreferences.preferences.settings should be(false)
+      userPreferences.preferences.measurement should be(false)
+    }
   }
 }
