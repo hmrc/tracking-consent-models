@@ -27,38 +27,34 @@ class UserPreferences() {
 
   private val logger: Logger = Logger(this.getClass)
 
-  private val userConsentCookieName = "userConsent"
+  private val userConsentCookieName     = "userConsent"
   private val userConsentCookieEncoding = "UTF-8"
-  private val userConsentCookieVersion = "2021.1"
+  private val userConsentCookieVersion  = "2021.1"
 
-  def preferences(implicit rh: RequestHeader): Preferences = {
+  def preferences(implicit rh: RequestHeader): Preferences =
     (for {
-      userConsentCookie <- rh.cookies.get(userConsentCookieName)
+      userConsentCookie  <- rh.cookies.get(userConsentCookieName)
       decodedCookieValue <- decodeCookie(userConsentCookie)
-      userConsent <-   Json.parse(decodedCookieValue).asOpt[UserConsent]
-      userPreference <- validateCookieVersion(userConsent)
-    } yield {
-      userPreference
-    }) getOrElse Preferences(measurement = false, settings = false)
-  }
+      userConsent        <- Json.parse(decodedCookieValue).asOpt[UserConsent]
+      userPreference     <- validateCookieVersion(userConsent)
+    } yield userPreference) getOrElse Preferences(measurement = false, settings = false)
 
-  private def decodeCookie(cookie: Cookie): Option[String] = {
+  private def decodeCookie(cookie: Cookie): Option[String] =
     Try(URLDecoder.decode(cookie.value, userConsentCookieEncoding)) match {
       case Success(decodedValue) => Some(decodedValue)
-      case Failure(exception) => {
+      case Failure(exception)    =>
         logger.logger.error(s"Cannot URL decode $userConsentCookieName cookie", exception)
         None
-      }
     }
-  }
 
-  private def validateCookieVersion(userConsent: UserConsent): Option[Preferences] = {
+  private def validateCookieVersion(userConsent: UserConsent): Option[Preferences] =
     if (userConsent.version == userConsentCookieVersion) Some(userConsent.preferences)
     else {
-      logger.logger.error(s"Invalid version of cookie $userConsentCookieName cookie: " +
-        s"expected $userConsentCookieVersion, got ${userConsent.version}")
+      logger.logger.error(
+        s"Invalid version of cookie $userConsentCookieName cookie: " +
+          s"expected $userConsentCookieVersion, got ${userConsent.version}"
+      )
       None
     }
-  }
 
 }
