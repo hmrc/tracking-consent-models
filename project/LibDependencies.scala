@@ -21,24 +21,24 @@ object LibDependencies {
 
   val compile: Seq[ModuleID] = PlayCrossCompilation.dependencies(
     shared = Seq(
-      "com.typesafe.play"     %% "play"         % PlayVersion.current
+      "com.typesafe.play" %% "play" % PlayVersion.current
     )
   )
 
   val test: Seq[ModuleID] = PlayCrossCompilation.dependencies(
     shared = Seq(
-      "com.typesafe.play"             %% "play-test"                % PlayVersion.current       % Test,
-      "com.vladsch.flexmark"          %  "flexmark-all"             % "0.35.10"                 % Test,
-      "org.scalatest"                 %% "scalatest"                % "3.2.3"                   % Test,
+      "com.typesafe.play"   %% "play-test"    % PlayVersion.current % Test,
+      "com.vladsch.flexmark" % "flexmark-all" % "0.35.10"           % Test,
+      "org.scalatest"       %% "scalatest"    % "3.2.3"             % Test
     ),
     play26 = Seq(
-      "org.scalatestplus.play"        %% "scalatestplus-play"       % "3.1.3"                   % Test
+      "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.3" % Test
     ),
     play27 = Seq(
-      "org.scalatestplus.play"        %% "scalatestplus-play"       % "4.0.3"                   % Test
+      "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % Test
     ),
     play28 = Seq(
-      "org.scalatestplus.play"        %% "scalatestplus-play"       % "5.1.0"                   % Test
+      "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
     )
   )
 
