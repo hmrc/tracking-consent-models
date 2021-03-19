@@ -26,6 +26,5 @@ object Preferences {
     (
       (__ \ "measurement").readWithDefault[Boolean](false) and
         (__ \ "settings").readWithDefault[Boolean](false)
-      )(Preferences.apply _)
+    )(Preferences.apply _)
 }
-

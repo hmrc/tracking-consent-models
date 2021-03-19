@@ -19,10 +19,10 @@ package uk.gov.hmrc.trackingconsent.models
 import play.api.libs.json.{Json, Reads}
 
 case class UserConsent(
-                        version: String,
-                        datetimeSet: String,
-                        preferences: Preferences
-                      )
+  version: String,
+  datetimeSet: String,
+  preferences: Preferences
+)
 
 object UserConsent {
 

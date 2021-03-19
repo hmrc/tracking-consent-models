@@ -17,18 +17,44 @@
 package uk.gov.hmrc.trackingconsent.models
 
 import play.api.libs.json.Json
-import play.api.mvc.RequestHeader
+import play.api.mvc.{Cookie, RequestHeader}
+import play.api.Logger
 
 import java.net.URLDecoder
+import scala.util.{Failure, Success, Try}
 
 class UserPreferences() {
-  def preferences(implicit rh: RequestHeader): Preferences = {
-    rh.cookies.get("userConsent") flatMap { userConsentCookie =>
-      val decodedCookie: String = URLDecoder.decode(userConsentCookie.value, "UTF-8")
-      Json.parse(decodedCookie)
-        .asOpt[UserConsent]
-        .collect { case userConsent if userConsent.version == "2021.1" => userConsent.preferences }
-    } getOrElse Preferences(measurement = false, settings = false)
-  }
+
+  private val logger: Logger = Logger(this.getClass)
+
+  private val userConsentCookieEncoding = "UTF-8"
+  private val userConsentCookieName       = "userConsent"
+  private val userConsentCookieVersion    = "2021.1"
+
+  def preferences(implicit rh: RequestHeader): Preferences =
+    (for {
+      userConsentCookie  <- rh.cookies.get(userConsentCookieName)
+      decodedCookieValue <- decodeCookie(userConsentCookie)
+      userConsent        <- Json.parse(decodedCookieValue).asOpt[UserConsent]
+      userPreference     <- validateCookieVersion(userConsent)
+    } yield userPreference) getOrElse Preferences(measurement = false, settings = false)
+
+  private def decodeCookie(cookie: Cookie): Option[String] =
+    Try(URLDecoder.decode(cookie.value, userConsentCookieEncoding)) match {
+      case Success(decodedValue) => Some(decodedValue)
+      case Failure(exception)    =>
+        logger.logger.error(s"Cannot URL decode $userConsentCookieName cookie", exception)
+        None
+    }
+
+  private def validateCookieVersion(userConsent: UserConsent): Option[Preferences] =
+    if (userConsent.version == userConsentCookieVersion) Some(userConsent.preferences)
+    else {
+      logger.logger.error(
+        s"Invalid version of cookie $userConsentCookieName cookie: " +
+          s"expected $userConsentCookieVersion, got ${userConsent.version}"
+      )
+      None
+    }
 
 }
