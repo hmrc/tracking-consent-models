@@ -16,5 +16,5 @@ lazy val trackingConsentModels = (project in file("."))
     resolvers += Resolver.typesafeRepo("releases"),
     resolvers += Resolver.bintrayRepo("hmrc", "releases"),
     makePublicallyAvailableOnBintray := true
-)
+  )
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
