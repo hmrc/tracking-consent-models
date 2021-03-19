@@ -19,9 +19,9 @@ package uk.gov.hmrc.trackingconsent.models
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-case class Preferences(measurement: Boolean, settings: Boolean)
+private[models] case class Preferences(measurement: Boolean, settings: Boolean)
 
-object Preferences {
+private[models] object Preferences {
   implicit val preferencesReads: Reads[Preferences] =
     (
       (__ \ "measurement").readWithDefault[Boolean](false) and

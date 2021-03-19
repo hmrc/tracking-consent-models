@@ -8,7 +8,7 @@ lazy val trackingConsentModels = (project in file("."))
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning)
   .disablePlugins(PlayLayoutPlugin)
   .settings(
-    majorVersion := 0,
+    majorVersion := 1,
     name := appName,
     scalaVersion := "2.12.13",
     PlayCrossCompilation.playCrossCompilationSettings,
