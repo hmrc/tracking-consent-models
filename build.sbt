@@ -14,7 +14,6 @@ lazy val trackingConsentModels = (project in file("."))
     PlayCrossCompilation.playCrossCompilationSettings,
     libraryDependencies ++= LibDependencies.all,
     resolvers += Resolver.typesafeRepo("releases"),
-    resolvers += Resolver.bintrayRepo("hmrc", "releases"),
-    makePublicallyAvailableOnBintray := true
+    isPublicArtefact := true
   )
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
