@@ -2,6 +2,9 @@ import sbt.Keys._
 import uk.gov.hmrc.versioning.SbtGitVersioning
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
+val scala2_12 = "2.12.13"
+val scala2_13 = "2.13.7"
+
 val appName = "tracking-consent-models"
 
 lazy val trackingConsentModels = (project in file("."))
@@ -10,7 +13,8 @@ lazy val trackingConsentModels = (project in file("."))
   .settings(
     majorVersion := 1,
     name := appName,
-    scalaVersion := "2.12.13",
+    scalaVersion := scala2_12,
+    crossScalaVersions := Seq(scala2_12, scala2_13),
     PlayCrossCompilation.playCrossCompilationSettings,
     libraryDependencies ++= LibDependencies.all,
     resolvers += Resolver.typesafeRepo("releases"),
