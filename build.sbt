@@ -15,7 +15,6 @@ lazy val trackingConsentModels = (project in file("."))
     name := appName,
     scalaVersion := scala2_12,
     crossScalaVersions := Seq(scala2_12, scala2_13),
-    PlayCrossCompilation.playCrossCompilationSettings,
     libraryDependencies ++= LibDependencies.all,
     resolvers += Resolver.typesafeRepo("releases"),
     isPublicArtefact := true
