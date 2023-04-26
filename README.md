@@ -1,3 +1,5 @@
+> **Note**
+> this repository has been archived because no-one was using it, you can still use the code as a reference if you need to check for a users tracking consent preference within your service. If you have any questions, reach out to #team-plat-ui in the hmrc digital slack
 
 # tracking-consent-models
 
